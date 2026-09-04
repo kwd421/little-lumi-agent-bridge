@@ -1,0 +1,85 @@
+# Little LUMI Agent Bridge 0.2.0
+# Copy this file to bridge.properties. Never put this file under Little LUMI's app/conf directory.
+
+# Local OpenAI-compatible endpoint used by Little LUMI.
+server.host=127.0.0.1
+server.port=11435
+server.threads=16
+server.maxRequestBytes=8388608
+# Keep false unless you fully understand the credential exposure risk.
+server.allowRemoteClients=false
+
+# Ollama Cloud endpoints. Little LUMI's existing Ollama bearer key is forwarded in memory.
+# Alternatively set OLLAMA_API_KEY in the bridge process environment.
+upstream.chatBase=https://ollama.com/v1
+upstream.webBase=https://ollama.com/api
+upstream.timeoutSeconds=180
+upstream.apiKeyEnv=OLLAMA_API_KEY
+
+# Agent loop. Normal language is enough: the model chooses tools automatically.
+agent.maxToolRounds=5
+agent.maxToolCalls=10
+agent.maxToolOutputChars=24000
+agent.injectToolInstructions=true
+agent.compactionGuard.enabled=true
+agent.autoSearch.enabled=true
+agent.autoSearch.currentInfo=true
+agent.autoSearch.eternalReturnEntities=true
+
+# Web tools.
+tools.webSearch.enabled=true
+tools.webSearch.maxResults=5
+tools.webSearch.maxSnippetChars=6000
+tools.webFetch.enabled=true
+tools.webFetch.maxContentChars=24000
+tools.webFetch.maxLinks=30
+
+# Eternal Return official-source search.
+tools.eternalReturn.enabled=true
+tools.eternalReturn.officialDomains=playeternalreturn.com,eternalreturn.com
+
+# Built-in read-only local filesystem tools. Disabled until one or more roots are configured.
+# On Windows, forward slashes are easiest. Separate multiple roots with semicolons.
+tools.files.enabled=false
+tools.files.roots=
+tools.files.maxReadChars=32000
+tools.files.maxEntries=200
+tools.files.searchMaxFiles=2000
+tools.files.searchMaxBytesPerFile=512000
+
+# Generic local MCP stdio servers. Disabled by default.
+# See config/mcp.example.json and docs/MCP.md.
+tools.mcp.enabled=false
+tools.mcp.config=config/mcp.json
+tools.mcp.timeoutSeconds=30
+tools.mcp.allowWrite=false
+tools.mcp.maxTools=64
+
+# OpenAI Codex CLI integration. Disabled until explicitly configured.
+# Run `codex login` yourself; the bridge never reads or exports the OAuth token.
+# Codex becomes available automatically for coding/repository/project requests.
+tools.codex.enabled=false
+tools.codex.command=codex
+tools.codex.workspace=
+tools.codex.writeEnabled=false
+tools.codex.ephemeral=true
+tools.codex.ignoreUserConfig=true
+tools.codex.ignoreRules=false
+tools.codex.scrubSensitiveEnvironment=true
+tools.codex.useChatgptOAuth=true
+tools.codex.timeoutSeconds=240
+tools.codex.maxOutputChars=32000
+tools.codex.model=
+
+# Optional web evidence cache. This is separate from Little LUMI's own chat memory.
+# It is disabled by default because web facts can become stale.
+memory.evidence.enabled=false
+memory.evidence.recall=false
+memory.evidence.path=data/evidence.jsonl
+memory.evidence.maxEntries=300
+memory.evidence.recallCount=2
+memory.evidence.maxEntryChars=16000
+
+# Logs never include Authorization headers. Tool arguments are also hidden by default.
+logging.verbose=false
+logging.toolArguments=false
