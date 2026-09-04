@@ -45,11 +45,24 @@ Little LUMI의 Ollama Cloud 채팅 앞에 두는 비공식 로컬 에이전트 �
 - 실행은 Little LUMI에 포함된 Java 런타임을 재사용하므로 별도 Java 설치는 보통 불필요
 - 소스 빌드 시 JDK 17 이상
 - MCP 서버에 따라 Node.js/Python 등 해당 서버의 런타임
-- Codex 기능 사용 시 공식 Codex CLI와 `codex login`
+- Codex 기능 사용 시 공식 Codex CLI. 로그인/상태 확인은 GUI에서도 시작 가능
 
-## 기본 설치
+## 기본 설치: GUI Manager
 
-릴리스 ZIP을 압축 해제하고 Little LUMI를 종료한 뒤 PowerShell에서 실행합니다.
+0.3.0부터는 터미널 명령이 기본 설치 방법이 아닙니다.
+
+1. 릴리스 ZIP을 풉니다.
+2. `Little LUMI Agent Manager.vbs`를 더블클릭합니다.
+3. 원하는 기능을 토글로 켜고 경로는 `찾기` 버튼으로 지정합니다.
+4. `설치 / 적용`을 누릅니다.
+
+설치 후에는 바탕화면의 `Little LUMI Agent Manager` 바로가기로 다시 열 수 있습니다. 웹검색, 이터널 리턴 공식검색, 로컬파일, MCP, Codex, 자동 시작, 근거 캐시 등을 전부 GUI에서 바꿀 수 있습니다.
+
+자세한 설명은 [GUI Manager](docs/GUI.md)를 참고하세요.
+
+### 고급/자동 설치용 PowerShell
+
+스크립트 방식도 자동화나 개발 용도로 계속 지원합니다.
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install.ps1
@@ -132,14 +145,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install.ps1 `
 
 ## Codex CLI 자동 위임
 
-브리지는 OpenAI OAuth 토큰을 직접 읽지 않습니다. 사용자가 공식 Codex CLI에서 로그인하고,
-브리지는 그 `codex exec` 프로세스만 호출합니다.
+브리지는 OpenAI OAuth 토큰을 직접 읽지 않습니다. GUI의 `로그인 / 상태 확인` 버튼은 설치된 Codex CLI의 로그인 상태를 확인하고, 필요하면 브라우저 OAuth 흐름을 시작합니다. 브리지는 로그인된 `codex exec` 프로세스만 호출합니다.
 
-```powershell
-codex login
-```
-
-읽기 전용으로 활성화:
+GUI에서는 `Codex 자동 위임` 토글을 켜고 작업 폴더를 지정하면 됩니다. PowerShell 자동 설치를 쓸 경우 읽기 전용으로 활성화:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install.ps1 `
@@ -228,7 +236,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 .\scripts\build.ps1
 ```
 
-결과물은 `dist/little-lumi-agent-bridge-0.2.0.jar`입니다.
+결과물은 `dist/little-lumi-agent-bridge-0.3.0.jar`입니다.
 
 ## 보안 경계
 
@@ -242,15 +250,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 
 자세한 내용은 [SECURITY.md](SECURITY.md)를 참고하세요.
 
-## 0.2.0 상태
+## 0.3.0 상태
 
-Java 17 빌드 및 모의 통합 테스트에서 웹 tool loop, 이터널 리턴 자동 공식 검색, 컴팩션 보호,
+Java 17 빌드 및 16개 모의/통합 테스트에서 웹 tool loop, 이터널 리턴 자동 공식 검색, 컴팩션 보호,
 로컬 파일 root 탈출 차단, stdio MCP 읽기 도구, Codex 자동 위임을 검증합니다. 다만 이 개발 환경은
 Windows가 아니므로 실제 Little LUMI 설치 스크립트의 최종 Windows 실행 검증은 사용자 환경에서
 `doctor.ps1`로 확인해야 합니다.
 
 ## 관련 문서
 
+- [GUI Manager](docs/GUI.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [MCP](docs/MCP.md)
 - [Codex](docs/CODEX.md)
