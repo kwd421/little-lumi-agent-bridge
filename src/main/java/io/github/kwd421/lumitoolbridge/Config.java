@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 public final class Config {
-    public static final String VERSION = "0.2.0";
+    public static final String VERSION = "0.3.0";
 
     private final Path source;
     private final Path baseDirectory;
