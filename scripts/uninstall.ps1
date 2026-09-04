@@ -28,7 +28,8 @@ if (Test-Path $AiProperties) {
 
 $StartupShortcut = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Startup\Little LUMI Agent Bridge.lnk'
 $DesktopShortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Little LUMI Agent.lnk'
-Remove-Item $StartupShortcut, $DesktopShortcut -Force -ErrorAction SilentlyContinue
+$ManagerShortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Little LUMI Agent Manager.lnk'
+Remove-Item $StartupShortcut, $DesktopShortcut, $ManagerShortcut -Force -ErrorAction SilentlyContinue
 
 if (-not $KeepFiles) {
     try {
