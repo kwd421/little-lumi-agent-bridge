@@ -177,12 +177,15 @@ if ($null -ne $ExistingState -and [string]$ExistingState.aiProperties -eq $AiPro
 $PowerShellExe = (Get-Command powershell.exe -ErrorAction Stop).Source
 $StartupShortcut = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Startup\Little LUMI Agent Bridge.lnk'
 $DesktopShortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Little LUMI Agent.lnk'
+$ManagerShortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Little LUMI Agent Manager.lnk'
 $RollbackRoot = Join-Path ([IO.Path]::GetTempPath()) ('LittleLumiAgentBridge-' + [guid]::NewGuid().ToString('N'))
 $BackupInstall = Join-Path $RollbackRoot 'install'
 $BackupStartup = Join-Path $RollbackRoot 'startup.lnk'
 $BackupDesktop = Join-Path $RollbackRoot 'desktop.lnk'
+$BackupManager = Join-Path $RollbackRoot 'manager.lnk'
 $HadStartupShortcut = Test-Path $StartupShortcut
 $HadDesktopShortcut = Test-Path $DesktopShortcut
+$HadManagerShortcut = Test-Path $ManagerShortcut
 $OldWasRunning = $false
 $ChangesStarted = $false
 $Health = $null
@@ -200,12 +203,13 @@ try {
     }
     if ($HadStartupShortcut) { Copy-Item -LiteralPath $StartupShortcut -Destination $BackupStartup -Force }
     if ($HadDesktopShortcut) { Copy-Item -LiteralPath $DesktopShortcut -Destination $BackupDesktop -Force }
+    if ($HadManagerShortcut) { Copy-Item -LiteralPath $ManagerShortcut -Destination $BackupManager -Force }
 
     $ChangesStarted = $true
     New-Item $InstallDir -ItemType Directory -Force | Out-Null
     New-Item (Join-Path $InstallDir 'scripts') -ItemType Directory -Force | Out-Null
     Copy-Item $JarSource.FullName (Join-Path $InstallDir 'little-lumi-agent-bridge.jar') -Force
-    foreach ($Script in @('runtime-common.ps1','start-bridge.ps1','stop-bridge.ps1','doctor.ps1','uninstall.ps1')) {
+    foreach ($Script in @('runtime-common.ps1','start-bridge.ps1','stop-bridge.ps1','doctor.ps1','uninstall.ps1','set-startup.ps1','codex-auth.ps1')) {
         Copy-Item (Join-Path $PSScriptRoot $Script) (Join-Path $InstallDir "scripts\$Script") -Force
     }
 
@@ -266,6 +270,14 @@ try {
         New-Shortcut -Path $DesktopShortcut -Target $PowerShellExe -Arguments $Arguments -WorkingDirectory $InstallDir -Icon $Icon
     }
 
+    $Javaw = Join-Path $LittleLumiRoot 'app\jre\bin\javaw.exe'
+    if ($NoDesktopShortcut) {
+        Remove-Item $ManagerShortcut -Force -ErrorAction SilentlyContinue
+    } elseif (Test-Path $Javaw) {
+        $ManagerArgs = '-jar "' + (Join-Path $InstallDir 'little-lumi-agent-bridge.jar') + '" --manager --install-dir "' + $InstallDir + '" --little-lumi-root "' + $LittleLumiRoot + '"'
+        New-Shortcut -Path $ManagerShortcut -Target $Javaw -Arguments $ManagerArgs -WorkingDirectory $InstallDir -Icon $Icon
+    }
+
     & $StartScript -InstallDir $InstallDir
     $Health = Get-BridgeHealth -InstallDir $InstallDir
     if (-not (Test-IsBridgeHealth $Health)) { throw 'Bridge health check failed.' }
@@ -291,6 +303,7 @@ try {
         }
         try { Restore-FileState -Path $StartupShortcut -Existed $HadStartupShortcut -Backup $BackupStartup } catch {}
         try { Restore-FileState -Path $DesktopShortcut -Existed $HadDesktopShortcut -Backup $BackupDesktop } catch {}
+        try { Restore-FileState -Path $ManagerShortcut -Existed $HadManagerShortcut -Backup $BackupManager } catch {}
     }
     if ($OldWasRunning -and $HadExistingInstall) {
         try {
