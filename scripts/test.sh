@@ -10,3 +10,5 @@ javac --release 17 --add-modules jdk.httpserver -Xlint:all -encoding UTF-8 \
   -cp "$ROOT/build/classes" -d "$TEST_CLASSES" "${TEST_SOURCES[@]}"
 java --add-modules jdk.httpserver -cp "$ROOT/build/classes:$TEST_CLASSES" \
   io.github.kwd421.lumitoolbridge.AllTests
+java --add-modules jdk.httpserver -cp "$ROOT/build/classes:$TEST_CLASSES" \
+  io.github.kwd421.lumitoolbridge.manager.ManagerTests
