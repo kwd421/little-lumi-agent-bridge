@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 - 2026-09-04
+
+- Fixed GUI launcher argument quoting on Windows paths containing spaces such as `Program Files` and `Little LUMI`.
+- Added visible GUI error reporting and manager launch logs instead of failing silently behind the VBS launcher.
+
 ## 0.3.0 - 2026-09-04
 
 - Added a Swing GUI Manager as the primary installation and configuration experience.
