@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 - 2026-09-04
+
+- Added a Swing GUI Manager as the primary installation and configuration experience.
+- Added toggle switches for web search, page fetch, automatic fresh-info search, official Eternal Return lookup, local files, MCP, Codex, evidence memory, and verbose logging.
+- Added GUI folder/file pickers for Little LUMI, local roots, MCP config, and Codex workspace.
+- Added GUI start/stop/doctor/log/open-folder/uninstall controls.
+- Added a console-free VBS launcher that reuses Little LUMI's bundled `javaw.exe`.
+- Added an installed desktop shortcut for reopening the Manager.
+- Added GUI Codex login/status flow using the installed Codex CLI without reading OAuth credentials directly.
+- Added a configuration-preservation test for GUI property editing; total mock/integration tests are now 16.
+
 ## 0.2.0 - 2026-09-04
 
 - Changed the primary UX to autonomous natural-language tool selection; slash commands are no longer required.
