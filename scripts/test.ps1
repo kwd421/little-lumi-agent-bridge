@@ -17,3 +17,5 @@ $Separator = [IO.Path]::PathSeparator
 $ClassPath = (Join-Path $Root 'build\classes') + $Separator + $TestClasses
 & java --add-modules jdk.httpserver -cp $ClassPath io.github.kwd421.lumitoolbridge.AllTests
 if ($LASTEXITCODE -ne 0) { throw "tests failed with exit code $LASTEXITCODE" }
+& java --add-modules jdk.httpserver -cp $ClassPath io.github.kwd421.lumitoolbridge.manager.ManagerTests
+if ($LASTEXITCODE -ne 0) { throw "manager tests failed with exit code $LASTEXITCODE" }
