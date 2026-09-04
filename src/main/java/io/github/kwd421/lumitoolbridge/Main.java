@@ -1,6 +1,7 @@
 package io.github.kwd421.lumitoolbridge;
 
 import io.github.kwd421.lumitoolbridge.tools.CodexTool;
+import io.github.kwd421.lumitoolbridge.manager.ManagerMain;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +12,10 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) throws Exception {
+        if (args.length > 0 && "--manager".equals(args[0])) {
+            ManagerMain.main(Arrays.copyOfRange(args, 1, args.length));
+            return;
+        }
         Arguments parsed = Arguments.parse(args);
         if (parsed.help) {
             printHelp();
@@ -67,6 +72,7 @@ public final class Main {
                   java -jar little-lumi-agent-bridge.jar [--config FILE]
                   java -jar little-lumi-agent-bridge.jar --check [--config FILE]
                   java -jar little-lumi-agent-bridge.jar --version
+                  java -jar little-lumi-agent-bridge.jar --manager [manager options]
 
                 Default config file: ./bridge.properties
                 """);
