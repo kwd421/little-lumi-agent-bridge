@@ -1,0 +1,15 @@
+build/
+dist/
+release/
+*.class
+*.jar
+*.zip
+*.log
+*.pid
+bridge.properties
+install-state.json
+data/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
