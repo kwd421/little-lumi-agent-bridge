@@ -19,8 +19,9 @@ Copy-Item (Join-Path $Root 'config\bridge.properties.example') (Join-Path $Stage
 Copy-Item (Join-Path $Root 'config\mcp.example.json') (Join-Path $Stage 'config')
 foreach ($File in @('README.md','LICENSE','NOTICE.md','SECURITY.md','CHANGELOG.md')) { Copy-Item (Join-Path $Root $File) $Stage }
 Copy-Item (Join-Path $Root 'docs\*.md') (Join-Path $Stage 'docs')
-foreach ($File in @('install.ps1','uninstall.ps1','start-bridge.ps1','stop-bridge.ps1','doctor.ps1','runtime-common.ps1')) {
+foreach ($File in @('install.ps1','uninstall.ps1','start-bridge.ps1','stop-bridge.ps1','doctor.ps1','runtime-common.ps1','set-startup.ps1','launch-manager.ps1','codex-auth.ps1')) {
     Copy-Item (Join-Path $PSScriptRoot $File) (Join-Path $Stage 'scripts')
 }
+Copy-Item (Join-Path $Root 'Little LUMI Agent Manager.vbs') $Stage -Force
 Compress-Archive -Path $Stage -DestinationPath $Archive -CompressionLevel Optimal
 Write-Host "Packaged $Archive"
