@@ -1,0 +1,35 @@
+name: Bug report
+description: Report a reproducible bridge problem without sharing credentials or proprietary files.
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not paste API keys, OAuth data, Little LUMI chat logs, persona text, or original binaries.
+  - type: input
+    id: version
+    attributes:
+      label: Bridge version
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: input
+    id: java
+    attributes:
+      label: Java version
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and redacted logs
+    validations:
+      required: true
