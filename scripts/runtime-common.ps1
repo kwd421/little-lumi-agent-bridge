@@ -52,7 +52,7 @@ function Set-PropertyLine {
     if (-not (Test-Path $Path)) { throw "Properties file not found: $Path" }
     $Utf8 = [Text.UTF8Encoding]::new($false)
     $Text = [IO.File]::ReadAllText($Path, $Utf8)
-    $Newline = if ($Text.Contains("`r`n")) { "`r`n" } else { "`n" }
+    $Eol = if ($Text.Contains("`r`n")) { "`r`n" } else { "`n" }
     $Lines = [regex]::Split($Text, "`r?`n")
     $Pattern = '^\s*' + [regex]::Escape($Key) + '\s*='
     $Indexes = @()
@@ -73,7 +73,7 @@ function Set-PropertyLine {
         }
     }
     $Temp = "$Path.lumi-agent-bridge.tmp"
-    [IO.File]::WriteAllText($Temp, [string]::Join($Newline, $Lines), $Utf8)
+    [IO.File]::WriteAllText($Temp, [string]::Join($Eol, $Lines), $Utf8)
     Move-Item $Temp $Path -Force
     return $OldLine
 }

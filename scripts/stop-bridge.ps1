@@ -15,7 +15,7 @@ if (Test-Path $PidFile) {
 try {
     $EscapedJar = [regex]::Escape($Jar)
     $Found = Get-CimInstance Win32_Process -ErrorAction Stop | Where-Object {
-        -not [string]::IsNullOrWhiteSpace($_.CommandLine) -and $_.CommandLine -match $EscapedJar
+        -not [string]::IsNullOrWhiteSpace($_.CommandLine) -and $_.CommandLine -match $EscapedJar -and $_.CommandLine -notmatch '(^|\s)--manager(\s|$)'
     }
     $Candidates += @($Found | ForEach-Object { $_.ProcessId })
 } catch {}
@@ -23,7 +23,7 @@ $Candidates = @($Candidates | Sort-Object -Unique)
 foreach ($ProcessId in $Candidates) {
     try {
         $Info = Get-CimInstance Win32_Process -Filter "ProcessId = $ProcessId" -ErrorAction Stop
-        if (-not [string]::IsNullOrWhiteSpace($Info.CommandLine) -and $Info.CommandLine.IndexOf($Jar, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
+        if (-not [string]::IsNullOrWhiteSpace($Info.CommandLine) -and $Info.CommandLine.IndexOf($Jar, [StringComparison]::OrdinalIgnoreCase) -ge 0 -and $Info.CommandLine -notmatch '(^|\s)--manager(\s|$)') {
             Stop-Process -Id $ProcessId -Force -ErrorAction Stop
         }
     } catch {}

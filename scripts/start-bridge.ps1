@@ -18,6 +18,15 @@ if ($null -ne $Health) {
         throw "Port $(Get-BridgePort $InstallDir) is occupied by another service."
     }
 } else {
+    # Refresh API keys from the user registry so the bridge always starts with
+    # current values even when the parent process was launched before the keys
+    # were set. Keys are never written to files.
+    foreach ($KeyName in @('GOOGLE_API_KEY', 'TAVILY_API_KEY', 'OLLAMA_API_KEY')) {
+        $RegValue = [Environment]::GetEnvironmentVariable($KeyName, 'User')
+        if (-not [string]::IsNullOrWhiteSpace($RegValue)) {
+            [Environment]::SetEnvironmentVariable($KeyName, $RegValue, 'Process')
+        }
+    }
     $Java = Get-BridgeJavaPath -InstallDir $InstallDir
     $Logs = Join-Path $InstallDir 'logs'
     New-Item $Logs -ItemType Directory -Force | Out-Null
